@@ -1,0 +1,85 @@
+DATABASE AND TABLE SET-UP
+
+1. Create Database and Table:
+-- Create the database
+CREATE DATABASE llin_analysis;
+
+-- Use the database
+USE llin_analysis;
+
+-- Create the table
+CREATE TABLE llin_distribution (
+    ID INT PRIMARY KEY,
+    number_distributed INT,
+    location VARCHAR(255),
+    country VARCHAR(255),
+    year INT,
+    by_whom VARCHAR(255),
+    country_code VARCHAR(3)
+);
+
+
+DESCRIPTIVE STATISTICS
+2. Calculate the Total Number of LLINs Distributed in Each Country:
+SELECT country, SUM(number_distributed) AS total_llins_distributed
+FROM llin_distribution
+GROUP BY country;
+
+> > Find the Average Number of LLINs Distributed per Distribution Event:
+SELECT AVG(number_distributed) AS average_llins_per_event
+FROM llin_distribution;
+
+> Determine the Earliest and Latest Distribution Dates:
+SELECT MIN(year) AS earliest_distribution_year, MAX(year) AS latest_distribution_year
+FROM llin_distribution;
+
+
+TRENDS AND PATTERNS
+3. Identify the Total Number of LLINs Distributed by Each Organization:
+SELECT by_whom, SUM(number_distributed) AS total_llins_distributed
+FROM llin_distribution
+GROUP BY by_whom;
+
+> Calculate the Total Number of LLINs Distributed in Each Year:
+SELECT year, SUM(number_distributed) AS total_llins_distributed
+FROM llin_distribution
+GROUP BY year;
+
+
+VOLUME INSIGHTS
+4. Find the Locations with the Highest and Lowest Number of LLINs Distributed:
+-- Highest
+SELECT location, MAX(number_distributed) AS highest_llins_distributed
+FROM llin_distribution
+GROUP BY location
+ORDER BY highest_llins_distributed DESC
+LIMIT 1;
+
+-- Lowest
+SELECT location, MIN(number_distributed) AS lowest_llins_distributed
+FROM llin_distribution
+GROUP BY location
+ORDER BY lowest_llins_distributed ASC
+LIMIT 1;
+
+> Determine if There's a Significant Difference in the Number of LLINs Distributed by Different Organizations:
+SELECT by_whom, SUM(number_distributed) AS total_llins_distributed
+FROM llin_distribution
+GROUP BY by_whom
+ORDER BY total_llins_distributed DESC;
+
+
+IDENTIFYING EXTREMES
+5. Identify Any Outliers or Significant Spikes in the Number of LLINs Distributed in Specific Locations or Periods:
+-- Outliers by location
+SELECT location, number_distributed
+FROM llin_distribution
+ORDER BY number_distributed DESC
+LIMIT 5;
+
+-- Outliers by period
+SELECT year, SUM(number_distributed) AS total_llins_distributed
+FROM llin_distribution
+GROUP BY year
+ORDER BY total_llins_distributed DESC
+LIMIT 5;
